@@ -8,13 +8,15 @@
 			var chart_id = {{ chartID|safe }}
 			var series = {{ series|safe }}
 			var title = {{ title|safe }}
-			var xAxis = {{ xAxis|safe }}
-			var yAxis = {{ yAxis|safe }}
 			var chart = {{ chart|safe }}
+			var tooltip = {{ tooltip|safe }}
+			var plotOptions = {{ plotOptions|safe }}
 		</script>
 			<script src="../static/js/jquery-3.4.1.min.js"></script>
 			<script src="../static/js/highcharts.js"></script>
+			<script src="http://code.highcharts.com/modules/exporting.js"></script>
 			<script src="../static/js/graph.js"></script>
+
 
 	</body>
 

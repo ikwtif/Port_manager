@@ -1,6 +1,6 @@
 from flask import render_template, url_for
 from app import app
-
+import json
 
 @app.route('/')
 def homepage():
@@ -38,14 +38,34 @@ def contactPage():
     return render_template("index.html", title=title, paragraph=paragraph, pageType=pageType)
 
 
+def read_json():
+    with app.open_resource('static/data.json') as json_file:
+        json_data = json.load(json_file)
+    print(json_data)
+    return json_data
 
 @app.route('/graph')
-def graph(chartID = 'chart_ID', chart_type = 'line', chart_height = 500):
-	chart = {"renderTo": chartID, "type": chart_type, "height": chart_height,}
-	series = [{"name": 'Label1', "data": [1,2,3]}, {"name": 'Label2', "data": [4, 5, 6]}]
-	title = {"text": 'My Title'}
-	xAxis = {"categories": ['xAxis Data1', 'xAxis Data2', 'xAxis Data3']}
-	yAxis = {"title": {"text": 'yAxis Label'}}
-	return render_template('graph.html', chartID=chartID, chart=chart, series=series, title=title, xAxis=xAxis, yAxis=yAxis)
+def graph(chartID = 'chart_ID', chart_type = 'pie', chart_height = 500):
+
+    json_data = read_json()
+    print(json_data)
+    ls = list()
+    for item in json_data:
+        ls.append({"name": item['Token'], "y": item['Amount']})
+    chart = {"renderTo": chartID, "type": chart_type, "height": chart_height, }
+    plotOptions = {"pie": {"allowPointSelect": 'true', "showInLegend": 'true'}}
+    series = [{"name": 'token', "colorByPoint": 'true', "data":ls}]
+    title = {"text": 'Token Allocation'}
+    tooltip = {"pointFormat": '{series.name}: <b>{point.percentage:.1f}%</b>'}
+    return render_template('graph.html', chartID=chartID, chart=chart, series=series, title=title, tooltip=tooltip, plotOptions=plotOptions)
  
 
+@app.route('/graph2')
+def graph2(chartID = 'chart_ID', chart_type = 'line', chart_height = 500):
+    chart = {"renderTo": chartID, "type": chart_type, "height": chart_height, }
+    series = [{"name": 'Label1', "data": [1,2,3]}, {"name": 'Label2', "data": [4, 5, 6]}]
+    title = {"text": 'My Title'}
+    xAxis = {"categories": ['xAxis Data1', 'xAxis Data2', 'xAxis Data3']}
+    yAxis = {"title": {"text": 'yAxis Label'}}
+
+    return render_template('graph.html', chartID=chartID, chart=chart, series=series, title=title, xAxis=xAxis, yAxis=yAxis)
