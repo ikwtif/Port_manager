@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, url_for
 from app import app
 
 
@@ -23,6 +23,9 @@ def aboutpage():
 
     return render_template("about.html", title=title, paragraph=paragraph, pageType=pageType)
 
+@app.route('/data')
+def send():
+    return "<a href={}>file</a>".format(url_for('static', filename='data.json'))
 
 @app.route('/about/contact')
 def contactPage():

@@ -14,23 +14,27 @@
 				<th>Amount</th>
 			</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>BTC</td>
-					<td>Binance</td>
-					<td>100</td>
-				</tr>
-			</tbody>
+
 		</table>
 	</div>
 
-	<script src="/static/js/jquery-3.4.1.min.js"></script>
-	<script src="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"></script>
-	<script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"></script>
 
 	<script>
 	$(document).ready( function () {
-		$('#example').DataTable();
+		$('#example').DataTable({
+		'ajax': {
+			'url': '../static/data.json',
+			'dataSrc': ''
+			},
+			'columns': [
+			{'data': 'Token'},
+			{'data': 'Exchange'},
+			{'data': 'Amount'}
+			]
+		});
 	});
 	</script>
 </body>
