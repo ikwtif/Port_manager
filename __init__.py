@@ -21,7 +21,7 @@ def aboutpage():
 
     pageType = 'about'
 
-    return render_template("index.html", title=title, paragraph=paragraph, pageType=pageType)
+    return render_template("about.html", title=title, paragraph=paragraph, pageType=pageType)
 
 
 @app.route('/about/contact')
