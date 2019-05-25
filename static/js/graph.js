@@ -1,3 +1,4 @@
+  
 $(document).ready(function() {
 	$(chart_id).highcharts({
 		chart: chart,
