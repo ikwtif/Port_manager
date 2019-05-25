@@ -1,0 +1,17 @@
+[
+  {
+    "Token": "BTC",
+    "Exchange": "Binance",
+    "Amount": 1
+  },
+  {
+    "Token": "ETH",
+    "Exchange": "Binance",
+    "Amount": 5
+  },
+  {
+    "Token": "BNB",
+    "Exchange": "Binance",
+    "Amount": 5
+  }
+]
