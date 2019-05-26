@@ -1,6 +1,24 @@
-from flask import render_template, url_for
+from flask import render_template, url_for, request, jsonify, redirect
+import flask_excel as excel
+from werkzeug import secure_filename
 from app import app
 import json
+import os
+
+excel.init_excel(app)
+
+@app.route('/upload')
+def upload_form():
+    return render_template('upload.html')
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if request.method == 'POST':
+        f = request.files['file']
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return redirect('/upload')
+
 
 @app.route('/')
 def homepage():
