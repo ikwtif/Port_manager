@@ -4,8 +4,11 @@ from werkzeug import secure_filename
 from app import app
 import json
 import os
+from load_excel import load_port
 
-excel.init_excel(app)
+
+expenses, portfolio, trades = load_port()
+
 
 @app.route('/upload')
 def upload_form():
