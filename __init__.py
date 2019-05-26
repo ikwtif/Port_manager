@@ -4,10 +4,12 @@ from werkzeug import secure_filename
 from app import app
 import json
 import os
-from load_excel import load_port
+from load_excel import portfolio_load
+import data_calculations as dc
 
 
-expenses, portfolio, trades = load_port()
+expenses, portfolio, trades = portfolio_load()
+portfolio_fiat, currency = dc.calc_portfolio_fiat(portfolio)
 
 
 @app.route('/upload')
@@ -67,23 +69,44 @@ def read_json():
 
 @app.route('/graph')
 def graph(chartID1 = 'chart_ID1', chartID2 = 'chart_ID2', chart_type1 = 'pie', chart_type2= 'pie', chart_height = 500):
-
-    json_data = read_json()
-    print(json_data)
     ls = list()
-    for item in json_data:
-        ls.append({"name": item['Token'], "y": item['Amount']})
+    for token in portfolio_fiat.keys():
+        ls.append({"name": token, "y": portfolio_fiat[token]['total']})
+    ls2 = list()
+    for index, row in portfolio_fiat.iterrows():
+        if index != 'total':
+            ls2.append({"name": index, "y": row.sum()})
+    print(ls)
+    print(ls2)
     chart1 = {"renderTo": chartID1, "type": chart_type1, "height": chart_height, }
-    plotOptions1 = {"pie": {"allowPointSelect": 'true', "showInLegend": 'true'}}
-    series1 = [{"name": 'token', "colorByPoint": 'true', "data":ls}]
-    title1 = {"text": 'Token Allocation'}
-    tooltip1 = {"pointFormat": '{series.name}: <b>{point.percentage:.1f}%</b>'}
+    plotOptions1 = {"pie": {"allowPointSelect": 'true',
+                            "showInLegend": 'true',
+                            "dataLabels": {"enabled": 'true',
+                                           "format": '<b>{point.name}</b>: {point.percentage:.1f} %'
+                    }}}
+    series1 = [{"name": 'percent',
+                "colorByPoint": 'true',
+                "data":ls
+                }]
+    title1 = {"text": 'Tokens Allocation'}
+    tooltip1 = {"headerFormat": '',
+                "pointFormat": '<span style="color:{point.color}">\u25CF</span> {point.name} <b></b><br/>' + '{}: '.format(currency) + '<b>{point.y}</b><br/>' + '{series.name}: <b>{point.percentage:.1f}%</b><br/>'}
 
-    chart2 = {"renderTo": chartID2, "type": chart_type2, "height": chart_height, }
-    plotOptions2 = {"pie": {"allowPointSelect": 'true', "showInLegend": 'true'}}
-    series2 = [{"name": 'token', "colorByPoint": 'true', "data": ls}]
-    title2 = {"text": 'Token Allocation'}
-    tooltip2 = {"pointFormat": '{series.name}: <b>{point.percentage:.1f}%</b>'}
+    chart2 = {"renderTo": chartID2,
+              "type": chart_type2,
+              "height": chart_height, }
+    plotOptions2 = {"pie": {"allowPointSelect": 'true',
+                            "showInLegend": 'true',
+                            "dataLabels": {"enabled": 'true',
+                                           "format": '<b>{point.name}</b>: {point.percentage:.1f} %'}}}
+    series2 = [{"name": 'percent',
+                "colorByPoint": 'true',
+                "data": ls2}]
+    title2 = {"text": 'Storage Allocation'}
+    convert2 = '{}:'.format(currency) + '<b>{point.y}</b><br/>'
+    print(convert2)
+    tooltip2 = {"headerFormat": '',
+                "pointFormat": '<span style="color:{point.color}">\u25CF</span> {point.name} <b></b><br/>' + '{}: '.format(currency) + '<b>{point.y}</b><br/>' + '{series.name}: <b>{point.percentage:.1f}%</b><br/>'}
 
     return render_template('graph.html', chartID1=chartID1, chart1=chart1, series1=series1, title1=title1, tooltip1=tooltip1, plotOptions1=plotOptions1,
                            chartID2=chartID2, chart2=chart2, series2=series2, title2=title2, tooltip2=tooltip2,
