@@ -3,24 +3,31 @@
 
 
 	<body>
-		<div id={{ chartID|safe }} class="chart" style="height: 500px; width: 500px"></div>
+		<div id={{ chartID1|safe }} class="chart" style="height: 500px; width: 500px"></div>
 		<script>
-			var chart_id = {{ chartID|safe }}
-			var series = {{ series|safe }}
-			var title = {{ title|safe }}
-			var chart = {{ chart|safe }}
-			var tooltip = {{ tooltip|safe }}
-			var plotOptions = {{ plotOptions|safe }}
+			var chart_id1 = {{ chartID1|safe }}
+			var series1 = {{ series1|safe }}
+			var title1 = {{ title1|safe }}
+			var chart1 = {{ chart1|safe }}
+			var tooltip1 = {{ tooltip1|safe }}
+			var plotOptions1 = {{ plotOptions1|safe }}
 		</script>
 
+        <div class="spacer"></div>
+        <div id={{ chartID2|safe }} class="chart"></div>
+        <script>
+            var chart_id2 = {{ chartID2|safe }}
+			var series2 = {{ series2|safe }}
+			var title2 = {{ title2|safe }}
+			var chart2 = {{ chart2|safe }}
+			var tooltip2 = {{ tooltip2|safe }}
+			var plotOptions2 = {{ plotOptions2|safe }}
+		  </script>
 
-
-			<script src="../static/js/jquery-3.4.1.min.js"></script>
+            <script src="../static/js/jquery-3.4.1.min.js"></script>
 			<script src="../static/js/highcharts.js"></script>
 			<script src="http://code.highcharts.com/modules/exporting.js"></script>
 			<script src="../static/js/graph.js"></script>
-
-
 	</body>
 
 {% endblock %}
