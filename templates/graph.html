@@ -1,9 +1,15 @@
 {% extends "index.html" %}
 {% block body %}
-
+	<head>
+        <style>
+            .chart{
+                float:left;
+            }
+        </style>
+    </head>
 
 	<body>
-		<div id={{ chartID1|safe }} class="chart" style="height: 500px; width: 500px"></div>
+		<div id={{ chartID1|safe }} class="chart" style="height: 100%; width: 50%; display:inline"></div>
 		<script>
 			var chart_id1 = {{ chartID1|safe }}
 			var series1 = {{ series1|safe }}
@@ -14,7 +20,8 @@
 		</script>
 
         <div class="spacer"></div>
-        <div id={{ chartID2|safe }} class="chart"></div>
+
+        <div id={{ chartID2|safe }} class="chart" style="height: 100%; width: 50%; display:inline"></div>
         <script>
             var chart_id2 = {{ chartID2|safe }}
 			var series2 = {{ series2|safe }}
