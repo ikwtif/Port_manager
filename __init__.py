@@ -45,7 +45,7 @@ def tablePage():
     port = portfolio_fiat.T
     port.index.name = 'Token'
 
-    return render_template("about.html", title=title, paragraph=paragraph, data=port.to_html(table_id="example"))
+    return render_template("about.html", title=title, paragraph=paragraph, data=port.to_html(classes=['table-hover', 'table-bordered', 'table-striped'], table_id="example"))
 
 @app.route('/data')
 def send():
