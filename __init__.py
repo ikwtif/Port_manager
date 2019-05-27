@@ -1,5 +1,4 @@
 from flask import render_template, url_for, request, jsonify, redirect
-import flask_excel as excel
 from werkzeug import secure_filename
 from app import app
 import json
@@ -36,8 +35,8 @@ def homepage():
     except Exception as e:
         return str(e)
 
-@app.route('/about')
-def aboutpage():
+@app.route('/table')
+def tablePage():
 
     title = "About this site"
     paragraph = ["blah blah blah memememememmeme blah blah memememe"]
@@ -67,8 +66,8 @@ def read_json():
     print(json_data)
     return json_data
 
-@app.route('/graph')
-def graph(chartID1 = 'chart_ID1', chartID2 = 'chart_ID2', chart_type1 = 'pie', chart_type2= 'pie', chart_height = 500):
+@app.route('/allocation')
+def allocation(chartID1 = 'chart_ID1', chartID2 = 'chart_ID2', chart_type1 = 'pie', chart_type2= 'pie', chart_height = 500):
     ls = list()
     for token in portfolio_fiat.keys():
         ls.append({"name": token, "y": portfolio_fiat[token]['total']})

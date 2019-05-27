@@ -1,10 +1,21 @@
 import pandas as pd
 import os
-
+import sys
 
 def portfolio_load():
+    #######COMMENT IN FOR PYINSTALLER#######
+    '''
+    basedir = sys.executable
+    last_dir = basedir.rfind("/")
+    basedir = basedir[:last_dir]
+    trade_path = '{}/test_port.xlsx'.format(basedir)
+    '''
+    #######COMMENT OUT FOR PYINSTALLER#######
     path = os.path.dirname(os.path.realpath(__file__))
-    trade_path = '{}/test_port.xlsx'.format(path)
+    print(path)
+    trade_path = '{}/portfolio.xlsx'.format(path)
+    ##########################################
+
     df = pd.read_excel(r'{}'.format(trade_path), sheet_name=None)
     expenses = df.get('expenses')
     portfolio = df.get('portfolio')
