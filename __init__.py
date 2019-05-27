@@ -42,8 +42,10 @@ def tablePage():
     print('json data', jsdata)
     title = "About this site"
     paragraph = ["blah blah blah memememememmeme blah blah memememe"]
+    port = portfolio_fiat.T
+    port.index.name = 'Token'
 
-    return render_template("about.html", title=title, paragraph=paragraph, data=portfolio_fiat.to_html(table_id="example"))
+    return render_template("about.html", title=title, paragraph=paragraph, data=port.to_html(table_id="example"))
 
 @app.route('/data')
 def send():
