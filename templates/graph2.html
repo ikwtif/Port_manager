@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+{% block body %}
+
+
+	<body>
+		<div id={{ chartID|safe }} class="chart" style="height: 500px; width: 500px"></div>
+		<script>
+			var chart_id = {{ chartID|safe }}
+			var series = {{ series|safe }}
+			var title = {{ title|safe }}
+			var xAxis = {{ xAxis|safe }}
+			var yAxis = {{ yAxis|safe }}
+			var chart = {{ chart|safe }}
+		</script>
+			<script src="../static/js/jquery-3.4.1.min.js"></script>
+			<script src="../static/js/highcharts.js"></script>
+			<script src="../static/js/graph2.js"></script>
+
+	</body>
+
+{% endblock %}

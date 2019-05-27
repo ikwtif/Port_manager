@@ -6,36 +6,25 @@
 	<div class="container">
 		<h4 class = "text-center">TABLE
 		</h4>
-		<table id="example" class="display" style="width:100%">
-			<thead>
-			<tr>
-				<th>Token</th>
-				<th>Exchange</th>
-				<th>Amount</th>
-			</tr>
-			</thead>
-
-		</table>
+			<div>
+				{{ data|safe }}
+			</div>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-	<script src="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
 
 	<script>
-	$(document).ready( function () {
+	$(document).ready(function() {
 		$('#example').DataTable({
-		'ajax': {
-			'url': '../static/data.json',
-			'dataSrc': ''
-			},
-			'columns': [
-			{'data': 'Token'},
-			{'data': 'Exchange'},
-			{'data': 'Amount'}
-			]
+		"language": {
+			"decimal": ",",
+			"thousands": "."
+			}
 		});
-	});
+		});
 	</script>
 </body>
 

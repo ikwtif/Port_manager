@@ -2,7 +2,8 @@ import requests
 
 
 def get_data():
-    response = requests.get("http://api.openmarketcap.com/api/v1/tokens")
+    response = requests.get("https://api.exchangeratesapi.io/latest?base=USD")
+    print(response)
     if response.status_code == 200:
         return response.json()
     else:
