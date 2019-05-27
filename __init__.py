@@ -5,7 +5,7 @@ import json
 import os
 from load_excel import portfolio_load
 import data_calculations as dc
-
+import pandas as pd
 
 expenses, portfolio, trades = portfolio_load()
 portfolio_fiat, currency = dc.calc_portfolio_fiat(portfolio)
@@ -14,6 +14,7 @@ portfolio_fiat, currency = dc.calc_portfolio_fiat(portfolio)
 @app.route('/upload')
 def upload_form():
     return render_template('upload.html')
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -37,13 +38,12 @@ def homepage():
 
 @app.route('/table')
 def tablePage():
-
+    jsdata = read_json()
+    print('json data', jsdata)
     title = "About this site"
     paragraph = ["blah blah blah memememememmeme blah blah memememe"]
 
-    pageType = 'about'
-
-    return render_template("about.html", title=title, paragraph=paragraph, pageType=pageType)
+    return render_template("about.html", title=title, paragraph=paragraph, data=portfolio_fiat.to_html(table_id="example"))
 
 @app.route('/data')
 def send():
