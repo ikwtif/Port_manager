@@ -11,4 +11,4 @@ from __init__ import *
 
 if __name__ == "__main__":
 	app.run(debug = True, host='0.0.0.0', port=8080, passthrough_errors=True)
-	#init_gui(app)
+	#init_gui(app, width=1000, height=1000)
