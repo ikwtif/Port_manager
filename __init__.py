@@ -6,6 +6,7 @@ import os
 from load_excel import portfolio_load
 import data_calculations as dc
 import pandas as pd
+import numpy as np
 
 expenses, portfolio, trades = portfolio_load()
 portfolio_fiat, currency = dc.calc_portfolio_fiat(portfolio)
@@ -36,16 +37,31 @@ def homepage():
     except Exception as e:
         return str(e)
 
+#formatter for seperator thousands for pandas df to html
+num_format = lambda x: '{:,}'.format(x)
+def build_formatters(df, format):
+    return {column: format
+            for (column, dtype) in df.dtypes.iteritems()
+            if dtype in [np.dtype('int64'), np.dtype('float64')]}
+
 @app.route('/table')
 def tablePage():
-    jsdata = read_json()
-    print('json data', jsdata)
+    #jsdata = read_json()
+    #print('json data', jsdata)
+
     title = "About this site"
     paragraph = ["blah blah blah memememememmeme blah blah memememe"]
+    print(portfolio_fiat.dtypes)
+    portfolio_fiat['btc'] = portfolio_fiat['btc'].astype(float)
+    print(portfolio_fiat.dtypes)
+    print(portfolio_fiat['btc']['ledger'])
+    print(type(portfolio_fiat['btc']['ledger']))
+    table_title = 'Crypto Portfolio in {}'.format(currency)
     port = portfolio_fiat.T
     port.index.name = 'Token'
+    formatters = build_formatters(port, num_format)
 
-    return render_template("about.html", title=title, paragraph=paragraph, data=port.to_html(classes=['table-hover', 'table-bordered', 'table-striped'], table_id="example"))
+    return render_template("about.html", title=title, table_title=table_title, paragraph=paragraph, data=port.to_html(formatters=formatters, classes=['table-hover', 'table-bordered', 'table-striped'], table_id="example"))
 
 @app.route('/data')
 def send():
