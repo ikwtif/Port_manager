@@ -4,7 +4,7 @@ from app import app
 import json
 import os
 from load_excel import portfolio_loadall
-import data_calculations as dc
+import data_formatting as dc
 import pandas as pd
 import numpy as np
 import structlog
