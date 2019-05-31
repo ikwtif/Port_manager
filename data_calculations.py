@@ -3,10 +3,10 @@ from api import openmarketcap, exchangerates
 import pandas as pd
 import numpy as np
 import structlog
+from conf import Configuration
 
-currency = 'EUR'
-rates = exchangerates.get_data()
-exchange_rate = rates['rates'][currency]
+
+
 logger = structlog.get_logger()
 
 '''
@@ -35,6 +35,20 @@ def portfolio_crypto_format(portfolio_crypto):
 
 
 def portfolio_crypto_fiat(portfolio):
+
+    conf = Configuration()
+
+    currency = conf.settings['currency']
+    rates = exchangerates.get_data()
+    try:
+        exchange_rate = rates['rates'][currency]
+    except:
+        key_list = ['USD']
+        for key in rates['rates'].keys():
+            key_list.append(key)
+        logger.warn('{} not found in exchangerates, possible symbols are: {}'.format(currency, key_list))
+        raise
+
     logger.info("Calculating crypto portfolio value in {}".format(currency))
 
 
