@@ -3,13 +3,13 @@ from werkzeug import secure_filename
 from app import app
 import json
 import os
-from load_excel import portfolio_load
+from load_excel import portfolio_loadall
 import data_calculations as dc
 import pandas as pd
 import numpy as np
 
-expenses, portfolio, trades = portfolio_load()
-portfolio_fiat, currency = dc.calc_portfolio_fiat(portfolio)
+expenses, portfolio_crypto, trades = portfolio_loadall()
+portfolio_crypto_fiat, currency = dc.portfolio_crypto_fiat(portfolio_crypto)
 
 
 @app.route('/upload')
@@ -51,13 +51,13 @@ def tablePage():
 
     title = "About this site"
     paragraph = ["blah blah blah memememememmeme blah blah memememe"]
-    print(portfolio_fiat.dtypes)
-    portfolio_fiat['btc'] = portfolio_fiat['btc'].astype(float)
-    print(portfolio_fiat.dtypes)
-    print(portfolio_fiat['btc']['ledger'])
-    print(type(portfolio_fiat['btc']['ledger']))
-    table_title = 'Crypto Portfolio in {}'.format(currency)
-    port = portfolio_fiat.T
+    print(portfolio_crypto_fiat.dtypes)
+    portfolio_crypto_fiat['btc'] = portfolio_crypto_fiat['btc'].astype(float)
+    print(portfolio_crypto_fiat.dtypes)
+    print(portfolio_crypto_fiat['btc']['ledger'])
+    print(type(portfolio_crypto_fiat['btc']['ledger']))
+    table_title = 'Crypto portfolio_crypto in {}'.format(currency)
+    port = portfolio_crypto_fiat.T
     port.index.name = 'Token'
     formatters = build_formatters(port, num_format)
 
@@ -87,14 +87,12 @@ def read_json():
 @app.route('/allocation')
 def allocation(chartID1 = 'chart_ID1', chartID2 = 'chart_ID2', chart_type1 = 'pie', chart_type2= 'pie', chart_height = 500):
     ls = list()
-    for token in portfolio_fiat.keys():
-        ls.append({"name": token, "y": portfolio_fiat[token]['total']})
     ls2 = list()
-    for index, row in portfolio_fiat.iterrows():
+    for token in portfolio_crypto_fiat.keys():
+        ls.append({"name": token, "y": round(portfolio_crypto_fiat[token]['total'], 2)})
+    for index, row in portfolio_crypto_fiat.iterrows():
         if index != 'total':
-            ls2.append({"name": index, "y": row.sum()})
-    print(ls)
-    print(ls2)
+            ls2.append({"name": index, "y": round(row.sum(), 2)})
     chart1 = {"renderTo": chartID1, "type": chart_type1, "height": chart_height, }
     plotOptions1 = {"pie": {"allowPointSelect": 'true',
                             "showInLegend": 'true',
@@ -121,7 +119,6 @@ def allocation(chartID1 = 'chart_ID1', chartID2 = 'chart_ID2', chart_type1 = 'pi
                 "data": ls2}]
     title2 = {"text": 'Storage Allocation'}
     convert2 = '{}:'.format(currency) + '<b>{point.y}</b><br/>'
-    print(convert2)
     tooltip2 = {"headerFormat": '',
                 "pointFormat": '<span style="color:{point.color}">\u25CF</span> {point.name} <b></b><br/>' + '{}: '.format(currency) + '<b>{point.y}</b><br/>' + '{series.name}: <b>{point.percentage:.1f}%</b><br/>'}
 

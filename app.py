@@ -1,8 +1,11 @@
 from flask import Flask
-
+import structlog
 from pyfladesk import init_gui
 
 UPLOAD_FOLDER = '/home/ikwtif/uploads'
+logger = structlog.get_logger()
+logger.info("Starting app")
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
