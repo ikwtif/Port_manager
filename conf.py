@@ -20,10 +20,17 @@ class Configuration():
         else:
             user_config = dict()
 
-        if 'settings' in user_config:
-            self.settings = {**default_config['settings'], **user_config['settings']}
+        if 'log_settings' in user_config:
+            self.settings_log = {**default_config['settings_log'], **user_config['settings_log']}
         else:
-            self.settings = default_config['settings']
+            self.settings_log = default_config['settings_log']
+
+        if 'main_settings' in user_config:
+            self.settings_main = {**default_config['settings_main'], **user_config['settings_main']}
+        else:
+            self.settings_main = default_config['settings_main']
+
+
 
 if __name__ == '__main__':
     conf = Configuration()

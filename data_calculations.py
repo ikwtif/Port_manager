@@ -35,10 +35,8 @@ def portfolio_crypto_format(portfolio_crypto):
 
 
 def portfolio_crypto_fiat(portfolio):
-
     conf = Configuration()
-
-    currency = conf.settings['currency']
+    currency = conf.settings_main['currency']
     rates = exchangerates.get_data()
     try:
         exchange_rate = rates['rates'][currency]
@@ -50,7 +48,6 @@ def portfolio_crypto_fiat(portfolio):
         raise
 
     logger.info("Calculating crypto portfolio value in {}".format(currency))
-
 
     openmc_data = openmarketcap.get_data()
     openmc_df = openmarketcap.parse_data(openmc_data)

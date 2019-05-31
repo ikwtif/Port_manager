@@ -1,4 +1,9 @@
-settings:
-  log_mode:
-  log_level:
-  currency: EUR
+settings_log:
+  log_mode: standard
+  log_level: INFO
+  output_mode: cli
+
+settings_main:
+  app: true
+  currency: USD
+

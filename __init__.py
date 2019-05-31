@@ -7,9 +7,14 @@ from load_excel import portfolio_loadall
 import data_calculations as dc
 import pandas as pd
 import numpy as np
+import structlog
 
 expenses, portfolio_crypto, trades = portfolio_loadall()
 portfolio_crypto_fiat, currency = dc.portfolio_crypto_fiat(portfolio_crypto)
+
+
+logger = structlog.get_logger()
+
 
 
 @app.route('/upload')

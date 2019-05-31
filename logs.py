@@ -7,6 +7,7 @@ import logging
 import structlog
 from pythonjsonlogger import jsonlogger
 
+configuration_runs = 0
 def configure_logging(loglevel, log_mode):
     """Configure the application logger
 
@@ -16,42 +17,48 @@ def configure_logging(loglevel, log_mode):
             text: Text logging is intended for users / developers.
             json: Json logging is intended for parsing with a log aggregation system.
     """
+    #check runs because app.py runs this twice
+    global configuration_runs
+    if configuration_runs == 0:
 
-    if not loglevel:
-        loglevel = logging.INFO
+        if not loglevel:
+            loglevel = logging.INFO
 
-    if log_mode == 'json':
-        log_formatter = jsonlogger.JsonFormatter()
-    elif log_mode == 'text':
-        log_formatter = logging.Formatter('%(message)s')
-    elif log_mode == 'standard':
-        log_formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        if log_mode == 'json':
+            log_formatter = jsonlogger.JsonFormatter()
+        elif log_mode == 'text':
+            log_formatter = logging.Formatter('%(message)s')
+        elif log_mode == 'standard':
+            log_formatter = logging.Formatter(
+                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            )
+        else:
+            log_formatter = logging.Formatter(
+                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            )
+
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(log_formatter)
+        root_logger = logging.getLogger()
+        root_logger.addHandler(handler)
+        root_logger.setLevel(loglevel)
+
+        structlog.configure(
+            processors=[
+                structlog.stdlib.filter_by_level,
+                structlog.stdlib.add_logger_name,
+                structlog.stdlib.add_log_level,
+                structlog.stdlib.PositionalArgumentsFormatter(),
+                structlog.processors.StackInfoRenderer(),
+                structlog.processors.format_exc_info,
+                structlog.processors.UnicodeDecoder(),
+                structlog.stdlib.render_to_log_kwargs,
+            ],
+            context_class=dict,
+            logger_factory=structlog.stdlib.LoggerFactory(),
+            wrapper_class=structlog.stdlib.BoundLogger,
+            cache_logger_on_first_use=True
         )
+        configuration_runs += 1
     else:
-        log_formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        )
-
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(log_formatter)
-    root_logger = logging.getLogger()
-    root_logger.addHandler(handler)
-    root_logger.setLevel(loglevel)
-
-    structlog.configure(
-        processors=[
-            structlog.stdlib.filter_by_level,
-            structlog.stdlib.add_logger_name,
-            structlog.stdlib.add_log_level,
-            structlog.stdlib.PositionalArgumentsFormatter(),
-            structlog.processors.StackInfoRenderer(),
-            structlog.processors.format_exc_info,
-            structlog.processors.UnicodeDecoder(),
-            structlog.stdlib.render_to_log_kwargs,
-        ],
-        context_class=dict,
-        logger_factory=structlog.stdlib.LoggerFactory(),
-        wrapper_class=structlog.stdlib.BoundLogger,
-        cache_logger_on_first_use=True
-    )
+        pass
