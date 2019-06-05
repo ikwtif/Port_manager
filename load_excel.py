@@ -6,35 +6,45 @@ logger = structlog.get_logger()
 
 
 def portfolio_loadall():
-    logger.info("Loading portfolio xlsx file")
+    """
+    Loads data from excel file sheets [expenses, crypto_portfolio, trades]
+    :return: dataframe for each excel sheet
+    """
+    logger.info("Loading portfolio.xlsx file")
 
-    #######COMMENT IN FOR PYINSTALLER#######
+    #######COMMENT IN FOR PYINSTALLER LINUX#######
     '''
     basedir = sys.executable
     last_dir = basedir.rfind("/")
     basedir = basedir[:last_dir]
-    trade_path = '{}/test_port.xlsx'.format(basedir)
+    path = '{}/test_port.xlsx'.format(basedir)
+    '''
+    #######COMMENT IN FOR PYINSTALLER WINDOWS#######
+    '''
+    path = os.path.dirname(sys.executable)
+    ------
+    or
+    -----
+    basedir = sys.executable
+    last_dir = basedir.rfind("\\")
+    path = basedir[:last_dir]
     '''
     #######COMMENT OUT FOR PYINSTALLER#######
     path = os.path.dirname(os.path.realpath(__file__))
-    print(path)
-    trade_path = '{}/portfolio.xlsx'.format(path)
     ##########################################
+
+    trade_path = '{}/portfolio.xlsx'.format(path)
     try:
-        df = pd.read_excel(r'{}'.format(trade_path), sheet_name=None)
+        expenses = pd.read_excel(r'{}'.format(trade_path), sheet_name='expenses')
+        portfolio_crypto = pd.read_excel(r'{}'.format(trade_path), sheet_name='portfolio')
+        trades = pd.read_excel(r'{}'.format(trade_path), sheet_name='trades')
     except:
         logger.warn("Failed loading portfolio.xlsx file")
-
-    expenses = df.get('expenses')
-    portfolio_crypto = df.get('portfolio')
-    trades = df.get('trades')
-
+    '''
     for name, sheet in {"expenses": expenses, "portfolio": portfolio_crypto, "trades": trades}.items():
         if sheet is None:
             logger.warn("Excel Sheet {} not found".format(name))
-
-
-
+    '''
     return expenses, portfolio_crypto, trades
 
 
