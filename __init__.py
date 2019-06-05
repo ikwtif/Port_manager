@@ -4,13 +4,13 @@ from app import app
 import json
 import os
 from load_excel import portfolio_loadall
-import data_formatting as dc
+import data_formatting as df
 import pandas as pd
 import numpy as np
 import structlog
 
 expenses, portfolio_crypto, trades = portfolio_loadall()
-portfolio_crypto_fiat, currency = dc.portfolio_crypto_fiat(portfolio_crypto)
+portfolio_crypto_fiat, currency = df.portfolio_crypto_fiat(portfolio_crypto)
 
 
 logger = structlog.get_logger()
@@ -51,22 +51,15 @@ def build_formatters(df, format):
 
 @app.route('/table')
 def tablePage():
-    #jsdata = read_json()
-    #print('json data', jsdata)
+
 
     title = "About this site"
     paragraph = ["blah blah blah memememememmeme blah blah memememe"]
-    print(portfolio_crypto_fiat.dtypes)
-    portfolio_crypto_fiat['btc'] = portfolio_crypto_fiat['btc'].astype(float)
-    print(portfolio_crypto_fiat.dtypes)
-    print(portfolio_crypto_fiat['btc']['ledger'])
-    print(type(portfolio_crypto_fiat['btc']['ledger']))
-    table_title = 'Crypto portfolio_crypto in {}'.format(currency)
-    port = portfolio_crypto_fiat.T
-    port.index.name = 'Token'
-    formatters = build_formatters(port, num_format)
 
-    return render_template("about.html", title=title, table_title=table_title, paragraph=paragraph, data=port.to_html(formatters=formatters, classes=['table-hover', 'table-bordered', 'table-striped'], table_id="example"))
+    table_title = 'Crypto Portfolio in {}'.format(currency)
+    formatters = build_formatters(portfolio_crypto_fiat, num_format)
+
+    return render_template("about.html", title=title, table_title=table_title, paragraph=paragraph, data=portfolio_crypto_fiat.to_html(formatters=formatters, classes=['table-hover', 'table-bordered', 'table-striped'], table_id="example"))
 
 @app.route('/data')
 def send():
@@ -93,12 +86,13 @@ def read_json():
 def allocation(chartID1 = 'chart_ID1', chartID2 = 'chart_ID2', chart_type1 = 'pie', chart_type2= 'pie', chart_height = 500):
     ls = list()
     ls2 = list()
-    for token in portfolio_crypto_fiat.keys():
-        ls.append({"name": token, "y": round(portfolio_crypto_fiat[token]['total'], 2)})
-    for index, row in portfolio_crypto_fiat.iterrows():
-        if index != 'total':
-            ls2.append({"name": index, "y": round(row.sum(), 2)})
+    for token in list(portfolio_crypto_fiat.index.values):
+        ls.append({"name": token, "y": round(portfolio_crypto_fiat['total'][token], 2)})
+    for column in portfolio_crypto_fiat:
+        if column != 'total':
+            ls2.append({"name": column, "y": round(portfolio_crypto_fiat[column].sum(), 2)})
     chart1 = {"renderTo": chartID1, "type": chart_type1, "height": chart_height, }
+
     plotOptions1 = {"pie": {"allowPointSelect": 'true',
                             "showInLegend": 'true',
                             "dataLabels": {"enabled": 'true',

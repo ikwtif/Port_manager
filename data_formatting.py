@@ -2,7 +2,8 @@ from load_excel import portfolio_loadall
 from api import openmarketcap, exchangerates
 import structlog
 from conf import Configuration
-
+import pandas as pd
+import datetime
 
 logger = structlog.get_logger()
 
@@ -67,10 +68,27 @@ def portfolio_crypto_fiat(portfolio):
     return portfolio_fiat, currency
 
 
+def expenses_format(expenses):
+    print(expenses)
+    now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    print('now', now)
+    print(type(now))
+    
+    expenses = expenses.fillna(0)
+    print(expenses['Start'][0])
+    print(type(expenses['Start'][0].to_pydatetime()))
+    print(expenses['End'][0] - expenses['Start'][0])
+    #print(datetime.timedelta(expenses['Start'][0].to_pydatetime()-now))
+    #expenses['Start'] = pd.to_datetime(expenses['Start'].dt.strftime['%d-%m-%Y'])
+    #print(expenses)
+
+    #expenses['Start'] = expenses['Start'].map(lambda x: x.strtime('%d/%m/%Y') if x == str() else '')
+
+
 if __name__ == '__main__':
     expenses, portfolio, trades = portfolio_loadall()
     #portfolio_crypto_format(portfolio)
-    portfolio_fiat, currency = portfolio_crypto_fiat(portfolio)
+    #portfolio_fiat, currency = portfolio_crypto_fiat(portfolio)
     #portfolio_datas(portfolio)
-
+    expenses_formatted = expenses_format(expenses)
 
