@@ -5,5 +5,5 @@ settings_log:
 
 settings_main:
   app: true
-  currency: USD
+  currency: EUR
 
